@@ -22,3 +22,5 @@ export PATH=/home/adufour/.dispatch/bin:$PATH
 # Don't cap hist size
 export HISTSIZE=10000000
 export HISTFILESIZE=10000000
+
+alias uid="ssh igm-qws-u12564a"

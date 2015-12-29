@@ -73,7 +73,7 @@ getUIDHostname =
       workstationLocation <- takeWhile (/= '-') <$> getHostName
       return $!
         if workstationLocation == "nyc"
-        then "tot"
+        then "igm"
         else workstationLocation
     getPrefix = do
       isIntern <- checkIsIntern
