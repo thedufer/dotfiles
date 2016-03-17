@@ -29,14 +29,18 @@ terminalCommand = "gnome-terminal"
 customBindings :: String -> [(String, X ())]
 customBindings uidHostname =
   [ ("M-p", shellPrompt defaultXPConfig)
-  , ("M-z", spawn "gnome-screensaver-command -l")
+  , ("M-z", spawn "xscreensaver-command -lock")
+  , ("<XF86Sleep>", spawn "xscreensaver-command -lock")
   , ("M-S-\\", sshUidBox uidHostname)
+  , ("<XF86AudioRaiseVolume>", spawn "amixer set Master 1%+")
+  , ("<XF86AudioLowerVolume>", spawn "amixer set Master 1%-")
+  , ("<XF86AudioMute>", spawn "amixer set Master toggle")
   ]
 
 main :: IO ()
 main = do
   uidHostname <- getUIDHostname
-  spawn "gnome-screensaver"
+  spawn "xscreensaver"
   displayHelp
   xmobar <- spawnPipe "xmobar"
   (xmonad . ewmh . (`additionalKeysP` customBindings uidHostname)) defaultConfig
