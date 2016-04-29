@@ -41,6 +41,9 @@ main :: IO ()
 main = do
   uidHostname <- getUIDHostname
   spawn "xscreensaver"
+  spawn "setxkbmap -option ctrl:nocaps"
+  spawn "xrandr --output HDMI-0 --primary --rotate-left"
+  spawn "xrandr --output DP-0 --pos 1200x390"
   displayHelp
   xmobar <- spawnPipe "xmobar"
   (xmonad . ewmh . (`additionalKeysP` customBindings uidHostname)) defaultConfig
