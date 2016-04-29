@@ -79,3 +79,5 @@ function proddb {
 }
 
 export LESS=" -R "
+
+alias uid="ssh igm-qws-u12564a"

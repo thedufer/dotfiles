@@ -29,14 +29,21 @@ terminalCommand = "gnome-terminal"
 customBindings :: String -> [(String, X ())]
 customBindings uidHostname =
   [ ("M-p", shellPrompt defaultXPConfig)
-  , ("M-z", spawn "gnome-screensaver-command -l")
+  , ("M-z", spawn "xscreensaver-command -lock")
+  , ("<XF86Sleep>", spawn "xscreensaver-command -lock")
   , ("M-S-\\", sshUidBox uidHostname)
+  , ("<XF86AudioRaiseVolume>", spawn "amixer set Master 1%+")
+  , ("<XF86AudioLowerVolume>", spawn "amixer set Master 1%-")
+  , ("<XF86AudioMute>", spawn "amixer set Master toggle")
   ]
 
 main :: IO ()
 main = do
   uidHostname <- getUIDHostname
-  spawn "gnome-screensaver"
+  spawn "xscreensaver"
+  spawn "setxkbmap -option ctrl:nocaps"
+  spawn "xrandr --output HDMI-0 --primary --rotate-left"
+  spawn "xrandr --output DP-0 --pos 1200x390"
   displayHelp
   xmobar <- spawnPipe "xmobar"
   (xmonad . ewmh . (`additionalKeysP` customBindings uidHostname)) defaultConfig
@@ -73,7 +80,7 @@ getUIDHostname =
       workstationLocation <- takeWhile (/= '-') <$> getHostName
       return $!
         if workstationLocation == "nyc"
-        then "tot"
+        then "igm"
         else workstationLocation
     getPrefix = do
       isIntern <- checkIsIntern
