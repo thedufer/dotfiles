@@ -47,22 +47,35 @@ case "${KRB5CCNAME}" in
     ;;
 esac
 
-# Make PS1 loud when there are no Kerberos credentials
+# Set up PS1
 export PROMPT_COMMAND=__prompt_command
 
 function __prompt_command() {
+  local EXIT="$?"
   RED="\[$(tput setaf 1)\]"
+  BOLD="\[$(tput bold)\]"
   RESET="\[$(tput sgr0)\]"
 
-  PS1="[\t "
+  # Put $HOSTNAME in the title
+  PS1="\[\033]0;$HOSTNAME\007\][\t "
 
-  if ! klist 2>/dev/null | grep $(whoami)@DELACY.COM >/dev/null; then
-    PS1+=$RED
+  # Prompts for password is there are no Kerberos credentials
+  if ! klist -s; then
+    kinit
   fi
 
-  PS1+="\u$RESET@\h \W]\$ "
+  PS1+="\u$RESET@\h \W]"
+
+  if [ "$EXIT" -ne 0 ]; then
+    PS1+=$RED$BOLD
+  fi
+  PS1+="\$$RESET "
 }
+
+# Useful functions
 
 function proddb {
   psql -h postgresmaster -d proddb -U $(whoami) "$@"
 }
+
+export LESS=" -R "
